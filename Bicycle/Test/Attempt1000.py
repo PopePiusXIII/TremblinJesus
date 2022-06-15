@@ -1,9 +1,8 @@
 import numpy as np
 from math import atan2
-from Frame import Frame, rotate2d
-from Axle import Axle
-import matplotlib.pyplot as plt
-from ResultsHandler import Result
+from Bicycle.Frame import Frame
+from Bicycle.Axle import Axle
+from Bicycle.VectorMath import rotatez
 
 
 class Car:
@@ -28,20 +27,21 @@ class Car:
         vx, vy, vz = self.frame_a.v
         kyf = self.FrontAxle.ky
         kyr = self.RearAxle.ky
-        w = self.frame_a.omega[2]
+        w = self.frame_a.omega
         a = self.FrontAxle.d
         b = self.RearAxle.d
         return delta, vx, vy, kyf, kyr, w, a, b
 
     def sa(self, axle):
         delta, vx, vy, kyf, kyr, w, a, b = self.get_states()
-        vx, vy = rotate2d(-self.frame_a.theta[2], self.frame_a.v[0:2])
+        vx, vy, vz = rotatez(-self.frame_a.theta[2], self.frame_a.v).flatten()
+        w = w[2][0]
         if axle == 'f':
-            v = [[vx], [vy + w * a]]
-            vfx, vfy = rotate2d(-delta, v)
+            v = np.array([vx, vy + w * a[0][0], vz])
+            vfx, vfy, vfz = rotatez(-delta, v).flatten()
             return atan2(vfy, vfx)
         elif axle == 'r':
-            return atan2(vy + w * -b, vx)
+            return atan2(vy + w * -b[0][0], vx)
         else:
             print("not valid choice")
 
@@ -63,12 +63,12 @@ class Car:
         delta, vx, vy, kyf, kyr, w, a, b = self.get_states()
         saf = self.sa('f')
         sar = self.sa('r')
-        mzf = -kyf * saf * a
-        mzr = -kyr * sar * -b
+        mzf = -kyf * saf * a[0][0]
+        mzr = -kyr * sar * -b[0][0]
         return mzf + mzr
 
     def alpha_z(self):
-        return np.array([0.0, 0.0, self.mz() / self.izz])
+        return np.array([[0.0], [0.0], [self.mz() / self.izz]])
 
     def ay(self):
         return (self.fyf() + self.fyr()) / self.mass
@@ -79,7 +79,7 @@ class Car:
         w_va = s[3]
 
         alpha = self.alpha_z()
-        r2dot_va = np.array([0.0, self.ay(), 0.0]) + np.cross(w_va, v_va)
-        r2dot_va = np.array([0, r2dot_va[1], 0])
+        r2dot_va = np.array([[0.0], [self.ay()], [0.0]]) + np.cross(w_va, v_va, axis=0)
+        r2dot_va = np.array([[0], r2dot_va[1], [0]])
         return [v_va, r2dot_va, w_va, alpha]
 

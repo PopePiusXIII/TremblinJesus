@@ -1,5 +1,4 @@
 import numpy as np
-from VectorMath import rotatez
 
 
 class Frame:

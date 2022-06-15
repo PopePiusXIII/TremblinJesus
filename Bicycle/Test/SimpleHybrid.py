@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from math import sin, cos
-from SimpleExamples.Attempt1000 import Car
-from Frame import Frame
+from Attempt1000 import Car
+from Bicycle.Frame import Frame
 
 results = {'r_vg': [],
            'rdot_vg': [],
@@ -25,7 +25,7 @@ def normalize_angle(angle):
     :param angle: (float)
     :return: (float) Angle in radian in [-pi, pi]
     """
-    norm_angle = angle
+    norm_angle = angle.flatten()
     for i in range(0, len(angle), 1):
         while norm_angle[i] > np.pi:
             norm_angle[i] -= 2.0 * np.pi
@@ -33,7 +33,7 @@ def normalize_angle(angle):
         while norm_angle[i] < -np.pi:
             norm_angle[i] += 2.0 * np.pi
 
-    return norm_angle
+    return np.array([norm_angle]).T
 
 
 def rotate3d(theta, vect):
@@ -48,38 +48,38 @@ def rotate3d(theta, vect):
 
 def write_result():
     results['delta'].append(car.FrontAxle.delta)
-    results['r_vg'].append(car.frame_a.r)
-    results['rdot_vg'].append(car.frame_a.v)
-    results['r2dot_vg'].append(car.frame_a.a)
-    results['r_va'].append(r_va)
-    results['rdot_va'].append(rdot_va)
-    results['r2dot_va'].append(r2dot_va)
-    results['theta'].append(car.frame_a.theta)
-    results['w'].append(car.frame_a.omega)
-    results['alpha'].append(car.frame_a.alpha)
+    results['r_vg'].append(car.frame_a.r.tolist())
+    results['rdot_vg'].append(car.frame_a.v.tolist())
+    results['r2dot_vg'].append(car.frame_a.a.tolist())
+    results['r_va'].append(r_va.tolist())
+    results['rdot_va'].append(rdot_va.tolist())
+    results['r2dot_va'].append(r2dot_va.tolist())
+    results['theta'].append(car.frame_a.theta.tolist())
+    results['w'].append(car.frame_a.omega.tolist())
+    results['alpha'].append(car.frame_a.alpha.tolist())
 
     odo_v = rotate3d(-car.frame_a.theta[2], car.frame_a.v)
     results['odo_v'].append(odo_v)
 
 
-dt = .001
-t = 20
+dt = .01
+t = 30
 steps = int(t / dt)
 frame_g = Frame()
 car = Car(frame_g)
-car.frame_a.v = np.array([20.0, 0.0, 0.0])
-car.frame_a.omega = np.array([0.0, 0.0, 0.0])
-r_va = np.array([0.0, 0.0, 0.0])
-rdot_va = np.array([20.0, 0.0, 0.0])
-r2dot_va = np.array([0.0, 0.0, 0.0])
+car.frame_a.v = np.array([[20.0], [0.0], [0.0]])
+car.frame_a.omega = np.array([[0.0], [0.0], [0.0]])
+r_va = np.array([[0.0], [0.0], [0.0]])
+rdot_va = np.array([[20.0], [0.0], [0.0]])
+r2dot_va = np.array([[0.0], [0.0], [0.0]])
 
 for t in np.linspace(0, t, steps):
-    car.FrontAxle.delta = .1 * sin(t/2.1)
-    s = np.array([r_va, rdot_va, car.frame_a.theta, car.frame_a.omega])
+    car.FrontAxle.delta = .03
+    s = [r_va, rdot_va, car.frame_a.theta, car.frame_a.omega]
     rdot_va, r2dot_va, car.frame_a.omega, car.frame_a.alpha = car.dsdt(t, s)
     rdot_va = rdot_va + r2dot_va * dt
 
-    car.frame_a.a = rotate3d(car.frame_a.theta[2], r2dot_va + np.cross(car.frame_a.omega, rdot_va))
+    car.frame_a.a = rotate3d(car.frame_a.theta[2], r2dot_va + np.cross(car.frame_a.omega, rdot_va, axis=0))
     car.frame_a.omega = car.frame_a.omega + car.frame_a.alpha * dt
     # car.frame_a.v = rotate3d(car.frame_a.theta[2], rdot_va)
     car.frame_a.v = car.frame_a.v + car.frame_a.a * dt

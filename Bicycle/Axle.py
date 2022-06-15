@@ -1,13 +1,13 @@
-from VectorMath import rotatez
+from Bicycle.VectorMath import rotatez
 from math import atan2
-from Frame import Frame
+from Bicycle.Frame import Frame
 import numpy as np
 
 
 class Axle:
     def __init__(self):
         self.ky = 50000.0  # N/rad
-        self.d = np.array([[1], [0], [0]])  # feet from axle centerline to cg m
+        self.d = np.array([[1], [0], [0]])  # meters from axle centerline to cg m
         self.tire_width = .33  # m
         self.tire_diameter = 1  # m
         self.delta = 0.0  # steering angle rad
