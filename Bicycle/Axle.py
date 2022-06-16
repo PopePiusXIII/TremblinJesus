@@ -28,9 +28,8 @@ class FrontAxle(Axle):
     def sa_calc(self, debug=False):
         vx, vy, vz = rotatez(-self.frame_a.theta[2], self.frame_a.v).flatten()
         w = self.frame_a.omega[2][0]
-        v = np.array([vx, vy + w * self.d[0][0], vz])
-        vfx, vfy, vfz = rotatez(-self.delta, v).flatten()
-        self.sa = atan2(vfy, vfx)
+        vx, vy, vz = np.array([vx, vy + w * self.d[0][0], vz])
+        self.sa = atan2(vy, vx) - self.delta
         if debug:
             print("Front", 'vy=', self.frame_a.v[1], '  vx=', self.frame_a.v[0], ' spin=',  w * self.d[0][0], '   sa=', self.sa)
 
