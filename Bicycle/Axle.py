@@ -19,25 +19,26 @@ class Axle:
         return 69
 
     def fy(self):
-        # self.sa_calc()
+        self.sa_calc()
         fy = -self.sa * self.ky
         return fy
 
 
 class FrontAxle(Axle):
     def sa_calc(self, debug=False):
-        spin = np.cross(self.frame_a.omega, self.d, axis=0)
-        v = self.frame_a.v + spin
-        vfx, vfy, vfz = rotatez(-self.delta, v)
-        self.sa = atan2(vfy / vfx, 1.0)
+        vx, vy, vz = rotatez(-self.frame_a.theta[2], self.frame_a.v).flatten()
+        w = self.frame_a.omega[2][0]
+        v = np.array([vx, vy + w * self.d[0][0], vz])
+        vfx, vfy, vfz = rotatez(-self.delta, v).flatten()
+        self.sa = atan2(vfy, vfx)
         if debug:
-            print("Front", 'vy=', self.frame_a.v[1], '  vx=', self.frame_a.v[0], ' spin=', spin[1], '   sa=', self.sa)
+            print("Front", 'vy=', self.frame_a.v[1], '  vx=', self.frame_a.v[0], ' spin=',  w * self.d[0][0], '   sa=', self.sa)
 
 
 class RearAxle(Axle):
     def sa_calc(self, debug=False):
-        spin = np.cross(self.frame_a.omega, self.d, axis=0)
-        vx, vy, vz = self.frame_a.v + spin
-        self.sa = atan2(vy / vx, 1.0)
+        vx, vy, vz = rotatez(-self.frame_a.theta[2], self.frame_a.v).flatten()
+        w = self.frame_a.omega[2][0]
+        self.sa = atan2(vy + w * self.d[0][0], vx)
         if debug:
-            print("Rear", 'vy=', self.frame_a.v[1], '  vx=', self.frame_a.v[0], ' spin=', spin[1], '   sa=', self.sa)
+            print("Rear", 'vy=', self.frame_a.v[1], '  vx=', self.frame_a.v[0], ' spin=',  w * self.d[0][0], '   sa=', self.sa)

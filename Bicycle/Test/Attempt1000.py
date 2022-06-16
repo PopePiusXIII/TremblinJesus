@@ -1,7 +1,7 @@
 import numpy as np
 from math import atan2
 from Frame import Frame
-from Axle import Axle
+from Axle import FrontAxle, RearAxle
 from VectorMath import rotatez
 
 
@@ -16,8 +16,11 @@ class Car:
 
         self.ics = np.array([self.frame_a.r, self.frame_a.v, self.frame_a.theta, self.frame_a.omega])
 
-        self.FrontAxle = Axle()
-        self.RearAxle = Axle()
+        self.FrontAxle = FrontAxle()
+        self.FrontAxle.frame_a = self.frame_a
+        self.RearAxle = RearAxle()
+        self.RearAxle.frame_a = self.frame_a
+        self.RearAxle.d = np.array([[-1], [0], [0]])
 
     def set_ics(self, x, y, vx, vy, w, alpha):
         self.ics = np.array([x, y, vx, vy, w, alpha])
@@ -32,35 +35,16 @@ class Car:
         b = self.RearAxle.d
         return delta, vx, vy, kyf, kyr, w, a, b
 
-    def sa(self, axle):
-        delta, vx, vy, kyf, kyr, w, a, b = self.get_states()
-        vx, vy, vz = rotatez(-self.frame_a.theta[2], self.frame_a.v).flatten()
-        w = w[2][0]
-        if axle == 'f':
-            v = np.array([vx, vy + w * a[0][0], vz])
-            vfx, vfy, vfz = rotatez(-delta, v).flatten()
-            return atan2(vfy, vfx)
-        elif axle == 'r':
-            return atan2(vy + w * -b[0][0], vx)
-        else:
-            print("not valid choice")
-
     def fyf(self):
-        saf = self.sa('f')
-        self.FrontAxle.sa = saf
         return self.FrontAxle.fy()
 
     def fyr(self):
-        sar = self.sa('r')
-        self.RearAxle.sa = sar
         return self.RearAxle.fy()
 
     def mz(self):
         delta, vx, vy, kyf, kyr, w, a, b = self.get_states()
-        self.FrontAxle.sa = self.sa('f')
-        self.RearAxle.sa = self.sa('r')
         mzf = self.fyf() * a[0][0]
-        mzr = self.fyr() * -b[0][0]
+        mzr = self.fyr() * b[0][0]
         return mzf + mzr
 
     def alpha_z(self):
