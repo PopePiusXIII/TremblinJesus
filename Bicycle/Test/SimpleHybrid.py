@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import sin, cos
 from Attempt1000 import Car
-from Bicycle.Frame import Frame
+from Frame import Frame
 
 results = {'r_vg': [],
            'rdot_vg': [],

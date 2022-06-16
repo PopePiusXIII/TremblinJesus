@@ -1,8 +1,8 @@
 import numpy as np
 from math import atan2
-from Bicycle.Frame import Frame
-from Bicycle.Axle import Axle
-from Bicycle.VectorMath import rotatez
+from Frame import Frame
+from Axle import Axle
+from VectorMath import rotatez
 
 
 class Car:
@@ -46,25 +46,21 @@ class Car:
             print("not valid choice")
 
     def fyf(self):
-        delta, vx, vy, kyf, kyr, w, a, b = self.get_states()
         saf = self.sa('f')
         self.FrontAxle.sa = saf
-        fyf = -kyf * saf
-        return fyf
+        return self.FrontAxle.fy()
 
     def fyr(self):
-        delta, vx, vy, kyf, kyr, w, a, b = self.get_states()
         sar = self.sa('r')
         self.RearAxle.sa = sar
-        fyr = -kyr * sar
-        return fyr
+        return self.RearAxle.fy()
 
     def mz(self):
         delta, vx, vy, kyf, kyr, w, a, b = self.get_states()
-        saf = self.sa('f')
-        sar = self.sa('r')
-        mzf = -kyf * saf * a[0][0]
-        mzr = -kyr * sar * -b[0][0]
+        self.FrontAxle.sa = self.sa('f')
+        self.RearAxle.sa = self.sa('r')
+        mzf = self.fyf() * a[0][0]
+        mzr = self.fyr() * -b[0][0]
         return mzf + mzr
 
     def alpha_z(self):

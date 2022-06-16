@@ -1,6 +1,6 @@
-from Bicycle.VectorMath import rotatez
+from VectorMath import rotatez
 from math import atan2
-from Bicycle.Frame import Frame
+from Frame import Frame
 import numpy as np
 
 
@@ -18,10 +18,10 @@ class Axle:
     def sa_calc(self):
         return 69
 
-    def fy(self, debug=False):
-        self.sa_calc(debug)
+    def fy(self):
+        # self.sa_calc()
         fy = -self.sa * self.ky
-        return np.array([[0], [fy], [0]])
+        return fy
 
 
 class FrontAxle(Axle):
