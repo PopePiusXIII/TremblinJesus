@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from math import sin, cos
-from Attempt1000 import Car
+from Vehicle import Car
 from Frame import Frame
 
 results = {'r_vg': [],

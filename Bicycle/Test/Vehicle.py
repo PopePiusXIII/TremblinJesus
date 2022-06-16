@@ -25,33 +25,20 @@ class Car:
     def set_ics(self, x, y, vx, vy, w, alpha):
         self.ics = np.array([x, y, vx, vy, w, alpha])
 
-    def get_states(self):
-        delta = self.FrontAxle.delta
-        vx, vy, vz = self.frame_a.v
-        kyf = self.FrontAxle.ky
-        kyr = self.RearAxle.ky
-        w = self.frame_a.omega
-        a = self.FrontAxle.d
-        b = self.RearAxle.d
-        return delta, vx, vy, kyf, kyr, w, a, b
-
-    def fyf(self):
-        return self.FrontAxle.fy()
-
-    def fyr(self):
-        return self.RearAxle.fy()
-
-    def mz(self):
-        delta, vx, vy, kyf, kyr, w, a, b = self.get_states()
-        mzf = self.fyf() * a[0][0]
-        mzr = self.fyr() * b[0][0]
-        return mzf + mzr
-
     def alpha_z(self):
-        return np.array([[0.0], [0.0], [self.mz() / self.izz]])
+        """
+        angular acceleration of vehicle ccw +
+        """
+        mzf = self.FrontAxle.fy() * self.FrontAxle.d[0][0]
+        mzr = self.RearAxle.fy() * self.RearAxle.d[0][0]
+        mz = mzf + mzr
+        return np.array([[0.0], [0.0], [mz/ self.izz]])
 
     def ay(self):
-        return (self.fyf() + self.fyr()) / self.mass
+        """
+        lateral acceleration of vehicle left is positive
+        """
+        return (self.FrontAxle.fy() + self.RearAxle.fy()) / self.mass
 
     def dsdt(self, t, s):
 
