@@ -25,31 +25,12 @@ public class SimpleCarController : MonoBehaviour {
 		frontPassengerW.brakeTorque = Math.Max(0, -m_verticalInput * motorForce);
 	}
 
-	private void UpdateWheelPoses()
-	{
-		UpdateWheelPose(frontDriverW, frontDriverT);
-		UpdateWheelPose(frontPassengerW, frontPassengerT);
-		UpdateWheelPose(rearDriverW, rearDriverT);
-		UpdateWheelPose(rearPassengerW, rearPassengerT);
-	}
-
-	private void UpdateWheelPose(WheelCollider _collider, Transform _transform)
-	{
-		Vector3 _pos = _transform.position;
-		Quaternion _quat = _transform.rotation;
-
-		_collider.GetWorldPose(out _pos, out _quat);
-
-		_transform.position = _pos;
-		_transform.rotation = _quat;
-	}
 
 	private void FixedUpdate()
 	{
 		GetInput();
 		Steer();
 		Accelerate();
-		UpdateWheelPoses();
 	}
 
 	private float m_horizontalInput;
