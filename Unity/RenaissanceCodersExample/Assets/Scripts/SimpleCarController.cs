@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using UnityEngine;
 
 public class SimpleCarController : MonoBehaviour {
@@ -42,5 +43,5 @@ public class SimpleCarController : MonoBehaviour {
 	public Transform frontDriverT, frontPassengerT;
 	public Transform rearDriverT, rearPassengerT;
 	public float maxSteerAngle = 30;
-	public float motorForce = 50;
+	public float motorForce = 500;
 }
