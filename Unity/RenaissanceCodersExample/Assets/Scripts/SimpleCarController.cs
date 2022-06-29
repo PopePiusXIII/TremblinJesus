@@ -40,8 +40,6 @@ public class SimpleCarController : MonoBehaviour {
 
 	public WheelCollider frontDriverW, frontPassengerW;
 	public WheelCollider rearDriverW, rearPassengerW;
-	public Transform frontDriverT, frontPassengerT;
-	public Transform rearDriverT, rearPassengerT;
 	public float maxSteerAngle = 30;
 	public float motorForce = 500;
 }
