@@ -15,9 +15,14 @@ public class EngineSound : MonoBehaviour
         double speed = carRigidBody.transform.InverseTransformDirection(carRigidBody.velocity)[2];
         double pitch = speed / 100 * pitchRateFudge + min_pitch;
         if (pitch > max_pitch)
+        {
             pitch = max_pitch;
+        }
         else if (pitch < min_pitch)
+        {
             pitch = min_pitch;
+        }
+
         Debug.Log(speed);
 
         engingeAudioSource.pitch = (float) pitch;
