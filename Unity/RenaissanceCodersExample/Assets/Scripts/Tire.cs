@@ -63,13 +63,16 @@ public class Tire : MonoBehaviour
         Debug.Log(hitinfof.distance);
 
     }
-
-    private double r0 = .5;
+    
+    [Tooltip("Unloaded Radius of Tire")]
+    public double r0 = .5;
+    [Tooltip("Spring Constant of Tire N/m")]
     public double k = 10;
+    [Tooltip("Damping Coefficient of Tire N-s/m")]
     public double c = -.1;
-    public double r;
-    public double rdot;
-    public Vector3 hubNormalVec;
+    private double r;
+    private double rdot;
+    private Vector3 hubNormalVec;
     public Vector3 newRot;
     private Transform hubTransform;
     private Rigidbody wheelRigidBody;
