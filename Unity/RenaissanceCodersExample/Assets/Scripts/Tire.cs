@@ -9,6 +9,7 @@ public class Tire : MonoBehaviour
     {
         hubTransform = GetComponent<Transform>();
         wheelRigidBody = GetComponent<Rigidbody>();
+        wheelRigidBody.AddRelativeTorque(-hubTransform.right * 10);
     }
 
     // Update is called once per frame
