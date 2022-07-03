@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tire : MonoBehaviour
+public class TireMC : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -20,16 +20,16 @@ public class Tire : MonoBehaviour
         
 
 
-        newRot = Quaternion.AngleAxis(-90, -hubTransform.up) * hubNormalVec;
+        newRot = Vector3.down;
 
 
 
-        if (Physics.Raycast(hubTransform.position, hubNormalVec, out RaycastHit hitinfo, 20f)) {
+        if (Physics.Raycast(hubTransform.position, Vector3.forward, out RaycastHit hitinfo, 20f)) {
             r = hitinfo.distance;
             if (r< r0)
             {
                 Vector3 normalForce = new Vector3((float)(k * (r - r0) + c * rdot), 0f, 0f);
-                wheelRigidBody.AddRelativeForce(normalForce);
+                wheelRigidBody.AddForce(wheelRigidBody.velocity * -2f, ForceMode.VelocityChange);
             }
 
         }
@@ -46,20 +46,23 @@ public class Tire : MonoBehaviour
             {
                 r = hitinfof.distance;
                 Vector3 normalForce2 = -newRot * (float)(k * (r - r0) + c * rdot);
-                wheelRigidBody.AddRelativeForce(normalForce2);
+                wheelRigidBody.AddForce(normalForce2);
+                wheelRigidBody.AddForce(Vector3.forward * 10);
             }
         }
 
         else
         {
-            Vector3 normalForce = new Vector3(0f, 0f, 0f);
-            wheelRigidBody.AddRelativeForce(normalForce);
+            Vector3 normalForce2 = new Vector3(0f, 0f, 0f);
+            wheelRigidBody.AddForce(normalForce2);
 
         }
 
-        Debug.DrawRay(hubTransform.position, hubNormalVec, Color.red, .1f);
+        Debug.DrawRay(hubTransform.position, hubNormalVec, Color.red, 10f);
         Debug.Log(hitinfo.distance);
-        Debug.DrawRay(hubTransform.position, newRot*.5f, Color.blue, .1f);
+        Debug.DrawRay(hubTransform.position, newRot, Color.blue, 5f);
+        Debug.Log(hitinfof.distance);        
+        Debug.DrawRay(hubTransform.position, Vector3.forward, Color.green, 5f);
         Debug.Log(hitinfof.distance);
 
     }
