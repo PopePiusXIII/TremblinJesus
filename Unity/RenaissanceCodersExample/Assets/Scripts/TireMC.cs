@@ -9,7 +9,7 @@ public class TireMC : MonoBehaviour
     {
         hubTransform = GetComponent<Transform>();
         wheelRigidBody = GetComponent<Rigidbody>();
-        wheelRigidBody.AddRelativeTorque(Vector3.up*-100);
+        //wheelRigidBody.AddRelativeTorque(Vector3.up*-100);
     }
 
     // Update is called once per frame
@@ -48,6 +48,8 @@ public class TireMC : MonoBehaviour
                 Vector3 normalForce2 = -newRot * (float)(k * (r - r0) + c * rdot);
                 wheelRigidBody.AddForce(normalForce2);
                 wheelRigidBody.AddForce(Vector3.forward * 10);
+                wheelRigidBody.AddTorque((wheelRigidBody.velocity.magnitude / ) * Vector3.right, ForceMode.VelocityChange);
+
             }
         }
 
@@ -68,7 +70,7 @@ public class TireMC : MonoBehaviour
     }
     
     [Tooltip("Unloaded Radius of Tire")]
-    public double r0 = .5;
+    public float r0 = .5f;
     [Tooltip("Spring Constant of Tire N/m")]
     public double k = 10;
     [Tooltip("Damping Coefficient of Tire N-s/m")]
