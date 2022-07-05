@@ -7,9 +7,9 @@ public class Tire : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Time.fixedDeltaTime = .01f;
         hubTransform = GetComponent<Transform>();
         wheelRigidBody = GetComponent<Rigidbody>();
-        wheelRigidBody.AddRelativeTorque(Vector3.up*-100);
     }
 
     // Update is called once per frame
@@ -19,59 +19,61 @@ public class Tire : MonoBehaviour
         rdot = wheelRigidBody.velocity.y;
         
 
-
-        newRot = Quaternion.AngleAxis(-90, -hubTransform.up) * hubNormalVec;
-
-
-
         if (Physics.Raycast(hubTransform.position, hubNormalVec, out RaycastHit hitinfo, 20f)) {
             r = hitinfo.distance;
             if (r< r0)
             {
-                Vector3 normalForce = new Vector3((float)(k * (r - r0) + c * rdot), 0f, 0f);
-                wheelRigidBody.AddRelativeForce(normalForce);
+                normalForce = (k * (r - r0) + c * rdot);
+                longitdudinalForce = LongitudinalForce(wheelRigidBody, hitinfo);
             }
 
         }
         else
         {
-            Vector3 normalForce = new Vector3(0f, 0f, 0f);
-            wheelRigidBody.AddRelativeForce(normalForce);
+            r = r0;
+            normalForce = 0;
+            longitdudinalForce = 0;
         }
-
-        if (Physics.Raycast(hubTransform.position, newRot, out RaycastHit hitinfof, 5f))
-        {
-            r = hitinfof.distance;
-            if (r < r0)
-            {
-                r = hitinfof.distance;
-                Vector3 normalForce2 = -newRot * (float)(k * (r - r0) + c * rdot);
-                wheelRigidBody.AddRelativeForce(normalForce2);
-            }
-        }
-
-        else
-        {
-            Vector3 normalForce = new Vector3(0f, 0f, 0f);
-            wheelRigidBody.AddRelativeForce(normalForce);
-
-        }
+        wheelRigidBody.AddRelativeForce(new Vector3(normalForce, 0f, longitdudinalForce));
 
         Debug.DrawRay(hubTransform.position, hubNormalVec, Color.red, .1f);
         Debug.Log(hitinfo.distance);
-        Debug.DrawRay(hubTransform.position, newRot*.5f, Color.blue, .1f);
-        Debug.Log(hitinfof.distance);
-
     }
-    
+
+    float FxModel(float slipRatio, float normalForce)
+    {
+        float slipStiffness = 31.4f;
+        float angularDrag = 1f;
+        return normalForce * Mathf.Sin(slipStiffness * slipRatio) - angularDrag * slipRatio;
+    }
+
+    float LongitudinalForce(Rigidbody wheel, RaycastHit hitinfo)
+    {
+        r = hitinfo.distance;
+        float contactPatchVx = omega_wheel * r;
+        slipRatio = (contactPatchVx - wheel.velocity[1]) / Mathf.Abs(wheel.velocity[1]);
+        return FxModel(slipRatio, normalForce);
+    }
+
+    void HubTorqueBalance()
+    {
+        float motorTorque = 100;
+        omega_wheel += (longitdudinalForce - motorTorque) / wheelRigidBody.inertiaTensor[1] * Time.fixedDeltaTime;
+    }
+
+
     [Tooltip("Unloaded Radius of Tire")]
-    public double r0 = .5;
+    public float r0 = .5f;
     [Tooltip("Spring Constant of Tire N/m")]
-    public double k = 10;
+    public float k = 10f;
     [Tooltip("Damping Coefficient of Tire N-s/m")]
-    public double c = -.1;
-    private double r;
-    private double rdot;
+    public float c = -.1f;
+    private float r;
+    private float rdot;
+    private float normalForce;
+    private float longitdudinalForce;
+    private float slipRatio;
+    private float omega_wheel = 0;
     private Vector3 hubNormalVec;
     public Vector3 newRot;
     private Transform hubTransform;
