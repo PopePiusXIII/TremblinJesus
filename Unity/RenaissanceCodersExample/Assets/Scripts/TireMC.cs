@@ -48,7 +48,7 @@ public class TireMC : MonoBehaviour
                 Vector3 normalForce2 = -newRot * (float)(k * (r - r0) + c * rdot);
                 wheelRigidBody.AddForce(normalForce2);
                 wheelRigidBody.AddForce(Vector3.forward * 10);
-                wheelRigidBody.AddTorque((wheelRigidBody.velocity.magnitude / ) * Vector3.right, ForceMode.VelocityChange);
+                wheelRigidBody.AddTorque((wheelRigidBody.velocity.magnitude / r0) * Vector3.right, ForceMode.VelocityChange);
 
             }
         }
