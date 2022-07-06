@@ -7,9 +7,12 @@ public class Tire : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Time.fixedDeltaTime = .01f;
         hubTransform = GetComponent<Transform>();
         wheelRigidBody = GetComponent<Rigidbody>();
+        wheelRotateBody = hubTransform.Find("Visual").gameObject.GetComponent<Rigidbody>();
+        wheelRotateTransform = hubTransform.Find("Visual").gameObject.GetComponent<Transform>();
+        wheelRotateBody.angularVelocity = -wheelRotateTransform.up * wheelRigidBody.velocity.z / r0;
+        wheelRotateTransform.localPosition = new Vector3(0f,0f,0f);
     }
 
     // Update is called once per frame
@@ -17,66 +20,61 @@ public class Tire : MonoBehaviour
     {
         hubNormalVec = -hubTransform.right;
         rdot = wheelRigidBody.velocity.y;
-        
 
         if (Physics.Raycast(hubTransform.position, hubNormalVec, out RaycastHit hitinfo, 20f)) {
             r = hitinfo.distance;
             if (r< r0)
             {
-                normalForce = (k * (r - r0) + c * rdot);
-                longitdudinalForce = LongitudinalForce(wheelRigidBody, hitinfo);
+                Vector3 normalForce = new Vector3((float)(k * (r - r0) + c * rdot), 0f, 0f);
+                wheelRigidBody.AddRelativeForce(normalForce);
             }
 
         }
         else
         {
-            r = r0;
-            normalForce = 0;
-            longitdudinalForce = 0;
+            Vector3 normalForce = new Vector3(0f, 0f, 0f);
+            wheelRigidBody.AddRelativeForce(normalForce);
         }
-        wheelRigidBody.AddRelativeForce(new Vector3(normalForce, 0f, longitdudinalForce));
 
+        if (Physics.Raycast(hubTransform.position, hubTransform.forward, out RaycastHit hitinfof, 5f))
+        {
+            r = hitinfof.distance;
+            if (r < r0)
+            {
+                r = hitinfof.distance;
+                Vector3 normalForce2 = -hubTransform.forward * (float)(k * (r - r0) + c * rdot);
+                wheelRigidBody.AddRelativeForce(normalForce2);
+            }
+        }
+
+        else
+        {
+            Vector3 normalForce = new Vector3(0f, 0f, 0f);
+            wheelRigidBody.AddRelativeForce(normalForce);
+
+        }
+
+        wheelRotateTransform.localPosition = new Vector3(0f, 0f, 0f);
+        wheelRotateBody.angularVelocity = -wheelRotateTransform.up * wheelRigidBody.velocity.z / r0;
         Debug.DrawRay(hubTransform.position, hubNormalVec, Color.red, .1f);
         Debug.Log(hitinfo.distance);
+        Debug.DrawRay(hubTransform.position, hubTransform.forward*.5f, Color.blue, 3f);
+        Debug.Log(hitinfof.distance);
+
     }
-
-    float FxModel(float slipRatio, float normalForce)
-    {
-        float slipStiffness = 31.4f;
-        float angularDrag = 1f;
-        return normalForce * Mathf.Sin(slipStiffness * slipRatio) - angularDrag * slipRatio;
-    }
-
-    float LongitudinalForce(Rigidbody wheel, RaycastHit hitinfo)
-    {
-        r = hitinfo.distance;
-        float contactPatchVx = omega_wheel * r;
-        slipRatio = (contactPatchVx - wheel.velocity[1]) / Mathf.Abs(wheel.velocity[1]);
-        return FxModel(slipRatio, normalForce);
-    }
-
-    void HubTorqueBalance()
-    {
-        float motorTorque = 100;
-        omega_wheel += (longitdudinalForce - motorTorque) / wheelRigidBody.inertiaTensor[1] * Time.fixedDeltaTime;
-    }
-
-
+    
     [Tooltip("Unloaded Radius of Tire")]
-    public float r0 = .5f;
+    public float r0 = 0.5f;
     [Tooltip("Spring Constant of Tire N/m")]
-    public float k = 10f;
+    public double k = 10;
     [Tooltip("Damping Coefficient of Tire N-s/m")]
-    public float c = -.1f;
-    private float r;
-    private float rdot;
-    private float normalForce;
-    private float longitdudinalForce;
-    private float slipRatio;
-    private float omega_wheel = 0;
+    public double c = -.1;
+    private double r;
+    private double rdot;
     private Vector3 hubNormalVec;
-    public Vector3 newRot;
     private Transform hubTransform;
     private Rigidbody wheelRigidBody;
+    private Rigidbody wheelRotateBody;
+    private Transform wheelRotateTransform;
 
 }
