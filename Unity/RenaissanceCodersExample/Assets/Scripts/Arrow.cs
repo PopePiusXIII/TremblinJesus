@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class Arrow
 {
-    //Transform arrowT { get; set; }
-    //Transform arrowR { get; set; }
-    //float lengthMin { get; set; }
-    //float lengthMax { get; set; }
-    //float valueMin { get; set; }
-    //float valueMax { get; set; }
     private Transform arrowh;
     private Rigidbody arrowi;
     private float lenmin;

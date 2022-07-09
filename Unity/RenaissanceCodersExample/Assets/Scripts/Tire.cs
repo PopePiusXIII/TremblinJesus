@@ -16,7 +16,7 @@ public class Tire : MonoBehaviour
         wheelRotateBody.angularVelocity = new Vector3(0f, 0f, -2f);
         wheelRotateTransform.localPosition = new Vector3(0f,0f,0f);
         wheelRigidBody.velocity = hubTransform.right * 1;
-        arrowT = wheelRotateTransform = hubTransform.Find("FX").gameObject.GetComponent<Transform>();
+        arrowT = hubTransform.Find("FX").gameObject.GetComponent<Transform>();
         arrowx = new Arrow(arrowT, wheelRigidBody, 0f, 1f, 0f, 1f);
     }
 
