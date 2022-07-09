@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: 6b20227a549b8444b9dd561cde0d9ba4
+guid: 9d2b044b1dd34e1408a55880034eaddf
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: CoordinateSystemMaterial
-    second: {fileID: 2100000, guid: 2b939a2c628dea64783682c8abcce175, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
