@@ -305,6 +305,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d2b044b1dd34e1408a55880034eaddf, type: 3}
+--- !u!1 &624832610 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d2b044b1dd34e1408a55880034eaddf,
+    type: 3}
+  m_PrefabInstance: {fileID: 429771992}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &624832612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624832610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d88683171810ee145b72fbd100948735, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameObjectMaster: {fileID: 2035020168}
+  wahte: {fileID: 0}
+  vMax: 10
+  maxLength: 1
 --- !u!1 &1132956058
 GameObject:
   m_ObjectHideFlags: 0
@@ -833,12 +855,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 6b20227a549b8444b9dd561cde0d9ba4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.495
+      value: 3.61
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6b20227a549b8444b9dd561cde0d9ba4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6b20227a549b8444b9dd561cde0d9ba4,
         type: 3}
@@ -903,6 +925,7 @@ MonoBehaviour:
   r0: 0.5
   k: -10000
   c: -150
+  longitdudinalForce: 0
   slipRatio: 0
   motorTorque: 0
   fxSlope: 0
@@ -924,7 +947,7 @@ Rigidbody:
   m_Mass: 20
   m_Drag: 0
   m_AngularDrag: 0
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0

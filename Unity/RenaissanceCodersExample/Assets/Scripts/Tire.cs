@@ -16,35 +16,36 @@ public class Tire : MonoBehaviour
         wheelRotateBody.angularVelocity = new Vector3(0f, 0f, -2f);
         wheelRotateTransform.localPosition = new Vector3(0f,0f,0f);
         wheelRigidBody.velocity = hubTransform.right * 1;
+        arrowT = wheelRotateTransform = hubTransform.Find("FX").gameObject.GetComponent<Transform>();
+        arrowx = new Arrow(arrowT, wheelRigidBody, 0f, 1f, 0f, 1f);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        arrowx.Change();
         hubNormalVec = -hubTransform.forward;   //this is dumb notation need to figure out how to fix
         rdot = hubTransform.InverseTransformDirection(wheelRigidBody.velocity).z;
-
-
         if (Physics.Raycast(hubTransform.position, hubNormalVec, out RaycastHit hitinfo, 5 * r0))
         {
             r = hitinfo.distance;
             if (r < r0)
             {
                 normalForce = (k * (r - r0) + c * rdot);
-                longitdudinalForce = LongitudinalForce(wheelRigidBody, hitinfo);
+                longitudinalForce = LongitudinalForce(wheelRigidBody, hitinfo);
             }
 
             else
             {
                 r = r0;
                 normalForce = 0;
-                longitdudinalForce = LongitudinalForce(wheelRigidBody, hitinfo);
-                longitdudinalForce = 0;
+                longitudinalForce = LongitudinalForce(wheelRigidBody, hitinfo);
+                longitudinalForce = 0;
             }
         }
 
-        wheelRigidBody.AddRelativeForce(new Vector3(longitdudinalForce, 0, normalForce));
-        wheelRotateBody.AddRelativeTorque(new Vector3(0f, -longitdudinalForce * r + motorTorque, 0f)); ;
+        wheelRigidBody.AddRelativeForce(new Vector3(longitudinalForce, 0, normalForce));
+        wheelRotateBody.AddRelativeTorque(new Vector3(0f, -longitudinalForce * r + motorTorque, 0f)); ;
         wheelRotateTransform.localPosition = new Vector3(0f, 0f, 0f);
 
         Debug.Log("r:" + r + "rdot:  " + rdot+  " fz:" + normalForce);
@@ -63,7 +64,7 @@ public class Tire : MonoBehaviour
         float hubVx = hubTransform.InverseTransformDirection(wheel.velocity).x;
 
         Debug.Log("hubvx: " + hubVx + " contact patch vx: " + contactPatchVx + "slip ratio: " + slipRatio);
-        Debug.Log("fx:" + longitdudinalForce);
+        Debug.Log("fx:" + longitudinalForce);
 
         if (Mathf.Abs(hubVx) < .001) slipRatio = contactPatchVx;
         else
@@ -85,7 +86,7 @@ public class Tire : MonoBehaviour
     private float r;
     private float rdot;
     private float normalForce;
-    private float longitdudinalForce;
+    public float longitudinalForce;
     public float slipRatio;
     public float motorTorque;
     public float fxSlope;
@@ -95,4 +96,8 @@ public class Tire : MonoBehaviour
     private Rigidbody wheelRigidBody;
     private Rigidbody wheelRotateBody;
     private Transform wheelRotateTransform;
+    private Transform arrowT;
+    private Arrow arrowx;
+
+
 }
