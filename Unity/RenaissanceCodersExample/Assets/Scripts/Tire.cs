@@ -12,18 +12,21 @@ public class Tire : MonoBehaviour
         wheelRigidBody = GetComponent<Rigidbody>();
         wheelRotateBody = hubTransform.Find("Visual").gameObject.GetComponent<Rigidbody>();
         wheelRotateTransform = hubTransform.Find("Visual").gameObject.GetComponent<Transform>();
+
         wheelRotateBody.maxAngularVelocity = 10000f;
         wheelRotateBody.angularVelocity = new Vector3(0f, 0f, -2f);
         wheelRotateTransform.localPosition = new Vector3(0f,0f,0f);
         wheelRigidBody.velocity = hubTransform.right * 1;
+
+        Transform arrowT = hubTransform.Find("FZ").gameObject.GetComponent<Transform>();
+        arrowz = new Arrow(arrowT, 1f, 100f);
         arrowT = hubTransform.Find("FX").gameObject.GetComponent<Transform>();
-        arrowx = new Arrow(arrowT, wheelRigidBody, 0f, 1f, 0f, 1f);
+        arrowx = new Arrow(arrowT, 1f, 100f);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        arrowx.Change();
         hubNormalVec = -hubTransform.forward;   //this is dumb notation need to figure out how to fix
         rdot = hubTransform.InverseTransformDirection(wheelRigidBody.velocity).z;
         if (Physics.Raycast(hubTransform.position, hubNormalVec, out RaycastHit hitinfo, 5 * r0))
@@ -50,6 +53,9 @@ public class Tire : MonoBehaviour
 
         Debug.Log("r:" + r + "rdot:  " + rdot+  " fz:" + normalForce);
         Debug.DrawRay(hubTransform.position, r * hubNormalVec, Color.red, .1f, false);
+
+        arrowz.Change(normalForce);
+        arrowx.Change(longitudinalForce);
     }
 
     float FxModel(float slipRatio, float normalForce)
@@ -96,8 +102,8 @@ public class Tire : MonoBehaviour
     private Rigidbody wheelRigidBody;
     private Rigidbody wheelRotateBody;
     private Transform wheelRotateTransform;
-    private Transform arrowT;
     private Arrow arrowx;
+    private Arrow arrowz;
 
 
 }
