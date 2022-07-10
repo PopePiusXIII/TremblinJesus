@@ -9,7 +9,7 @@ public class ForcesUI : MonoBehaviour
     public float fx;
     public Tire Tirex;
     TextMeshProUGUI text;
-    // Start is called before the first frame update
+
     void Start()
     {
         text = GetComponent<TextMeshProUGUI>();
@@ -19,6 +19,6 @@ public class ForcesUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        text.text = "Fy:" + Tirex.longitudinalForce.ToString();
+        text.text = "Fx:" + Tirex.Fx.ToString();
     }
 }
