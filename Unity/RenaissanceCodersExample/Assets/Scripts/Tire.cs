@@ -92,7 +92,7 @@ public class Tire : MonoBehaviour
     public float c = -1f;
     private float r;
     private float rdot;
-    private float Fz;
+    public float Fz;
     public float Fx;
     public float slipRatio;
     public float motorTorque;
