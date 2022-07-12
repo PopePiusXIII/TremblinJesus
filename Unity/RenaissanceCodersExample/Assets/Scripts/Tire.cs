@@ -14,14 +14,14 @@ public class Tire : MonoBehaviour
         wheelRotateTransform = hubTransform.Find("Visual").gameObject.GetComponent<Transform>();
 
         wheelRotateBody.maxAngularVelocity = 10000f;
-        wheelRotateBody.angularVelocity = new Vector3(0f, 0f, -2f);
+        wheelRotateBody.angularVelocity = new Vector3(0f, 0f, -2.19f);
         wheelRotateTransform.localPosition = new Vector3(0f,0f,0f);
-        wheelRigidBody.velocity = hubTransform.right * 1;
+        wheelRigidBody.velocity = hubTransform.right * 5;
 
         Transform arrowT = hubTransform.Find("FZ").gameObject.GetComponent<Transform>();
         arrowz = new Arrow(arrowT, 1f, 100f);
         arrowT = hubTransform.Find("FX").gameObject.GetComponent<Transform>();
-        arrowx = new Arrow(arrowT, 1f, 100f);
+        arrowx = new Arrow(arrowT, 1f, 5f);
     }
 
     // Update is called once per frame
@@ -78,7 +78,7 @@ public class Tire : MonoBehaviour
         else
         {
             slipRatio = contactPatchVx / hubVx - 1;
-            slipRatio = Mathf.Sign(slipRatio) * Mathf.Min(Mathf.Abs(slipRatio), .1f);
+            slipRatio = Mathf.Sign(hubVx) * Mathf.Sign(slipRatio) * Mathf.Min(Mathf.Abs(slipRatio), .1f);
         }
         return slipRatio;
     }

@@ -19,6 +19,6 @@ public class ForcesUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        text.text = "Fz:" + Mathf.Round(Tirex.Fz).ToString();
+        text.text = "slipRatio:" + System.Math.Round(Tirex.slipRatio, 3).ToString() + "    Fx:" + Mathf.Round(Tirex.Fx).ToString();
     }
 }
